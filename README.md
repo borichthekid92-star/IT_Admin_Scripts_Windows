@@ -1,8 +1,8 @@
 # IT_Admin_Scripts_Windows
 AI generated scripts for IT admin work
 
-CollectAll 
-.SYNOPSIS
+#CollectAll 
+#.SYNOPSIS
     Windows Forensic Artifact Collection Script for Incident Response
 
 .DESCRIPTION
