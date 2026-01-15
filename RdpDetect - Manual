@@ -1,0 +1,138 @@
+# Remote Desktop Detection Script Manual
+
+## Overview
+
+Detects all remote desktop and remote access applications installed on a Windows system. Searches registry, program files, running processes, services, and network listeners. Generates timestamped report with findings and forensic analysis.
+
+**Authorization required for use.**
+
+---
+
+## Setup & Execution
+
+### Basic Run
+```cmd
+cd C:\path\to\script
+remote_desktop_detection.bat
+```
+
+### Run as Administrator
+Right-click Command Prompt → Run as Administrator → Run script
+
+### Schedule Scan
+Windows Task Scheduler → New Task → Set to run batch file with highest privileges
+
+---
+
+## How It Works
+
+The script performs 9 detection steps:
+
+1. **Registry Search** - Queries installed programs for 25+ remote desktop keywords
+2. **Program Files** - Searches C:\Program Files and AppData directories
+3. **Running Processes** - Lists currently executing remote access applications
+4. **Windows Services** - Checks TermService, RemoteRegistry, and third-party services
+5. **Store Apps** - Detects Microsoft Store remote access applications
+6. **Browser Extensions** - Finds Chrome Remote Desktop extension
+7. **Recent Connections** - Reads RDP connection history from registry
+8. **Network Listeners** - Identifies open ports (3389, 5900, etc.)
+9. **Summary** - Provides forensic indicators and recommendations
+
+---
+
+## Output
+
+**File Format**: `remote_desktop_apps_YYYYMMDD_HHMMSS.txt` (saved in current directory)
+
+**Contents**:
+- Installed applications from registry
+- Installation directories found
+- Running remote access processes
+- Service status and startup type
+- Recent RDP connections
+- Listening ports
+- Forensic summary
+
+---
+
+## Applications Detected
+
+**Built-in**: Remote Desktop (mstsc), Remote Registry, RD Connection Manager
+
+**Commercial**: TeamViewer, AnyDesk, Citrix, LogMeIn, ConnectWise ScreenConnect, Splashtop, GoToMyPC, Jump Desktop, Parsec
+
+**Free/Open Source**: VNC (RealVNC, UltraVNC), Chrome Remote Desktop, Remmina, mRemoteNG, Moonlight
+
+**High Risk**: Ammyy Admin, Radmin, Supremo, TemRem
+
+**Collaboration**: Skype, DingTalk, WeChat, QQ, Tencent Meeting
+
+---
+
+## Interpreting Results
+
+| Finding | Risk Level | Action |
+|---------|-----------|--------|
+| Unexpected TeamViewer/AnyDesk | HIGH | Verify IT approval; check connection logs |
+| Ammyy Admin detected | CRITICAL | Investigate immediately for fraud/compromise |
+| RDP to unknown server | HIGH | Verify server; check event logs |
+| TermService disabled | LOW | Normal for user workstations |
+| Approved IT tools (ConnectWise) | LOW | Document and baseline |
+| Unknown listening ports | HIGH | Identify process; verify legitimacy |
+
+---
+
+## Forensic Use
+
+**Incident Response**: Run during breach investigations
+```cmd
+remote_desktop_detection.bat
+copy remote_desktop_apps_*.txt E:\evidence\
+```
+
+**Insider Threat**: Identify unauthorized remote access tools used for data theft
+
+**Malware Detection**: Find Remote Access Trojans (RATs) and command & control tools
+
+**Compliance Audit**: Document remote access tools for SOC 2, PCI-DSS, HIPAA, ISO 27001
+
+---
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| No output file created | Run from writable directory (C:\Temp) |
+| "Access Denied" errors | Run as Administrator |
+| PowerShell checks empty | Not critical; most findings from batch commands |
+| Script very slow | Run on C:\Users instead of entire C:\ |
+| Antivirus blocks queries | Temporarily whitelist script or disable AV |
+
+---
+
+## Quick Tips
+
+- Run elevated (as Administrator)
+- Check output file in current directory
+- Compare findings against approved software list
+- Correlate with Windows Event Logs for RDP connections
+- Treat output as sensitive security data
+- Archive reports for compliance
+
+---
+
+## Security Checklist
+
+- [ ] Get written authorization before scanning
+- [ ] Document audit date and purpose
+- [ ] Run during maintenance window
+- [ ] Encrypt/protect output file
+- [ ] Analyze findings thoroughly
+- [ ] Investigate suspicious applications
+- [ ] Archive results for audit trail
+- [ ] Securely delete when no longer needed
+
+---
+
+**Compatible with**: Windows XP SP3 and later
+**Version**: 1.0
